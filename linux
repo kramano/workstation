@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+CLEAR="\033[0m"
+ORANGE="\033[33m"
+
+successfully() {
+  $* || (echo "failed" 1>&2 && exit 1)
+}
+
+fancy_echo() {
+  echo -e ${ORANGE}$1${CLEAR}
+  echo
+}
+
+fancy_echo "Installing git, for source control management ..."
+  successfully sudo aptitude install -y git
+
+fancy_echo "Installing The Silver Searcher (better than ack or grep) to search the contents of files ..."
+  successfully git clone git://github.com/ggreer/the_silver_searcher.git /tmp/the_silver_searcher
+  successfully sudo aptitude install -y automake pkg-config libpcre3-dev zlib1g-dev liblzma-dev
+  successfully sh /tmp/the_silver_searcher/build.sh
+  successfully cd /tmp/the_silver_searcher
+  successfully sh build.sh
+  successfully sudo make install
+  successfully cd ~
+  successfully rm -rf /tmp/the_silver_searcher
+
+fancy_echo "Installing Oracle jdk 6 ..."
+	successfully sudo add-apt-repository ppa:webupd8team/java
+	successfully sudo apt-get update -y
+	successfully sudo apt-get install oracle-java6-installer
+
+fancy_echo "Installing cinnamon ..."
+	successfully sudo add-apt-repository ppa:gwendal-lebihan-dev/cinnamon-stable
+	successfully sudo apt-get update
+    successfully sudo apt-get install cinnamon nemo
+
+fancy_echo "Installing oh-my-zsh ..."
+	successfully wget --no-check-certificate https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
+
